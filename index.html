@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Juego del Impostor</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ff6b6b, #f0e130);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px #000;
+        }
+        .container {
+            background-color: rgba(0,0,0,0.6);
+            padding: 20px;
+            border-radius: 15px;
+            color: #fff;
+            width: 300px;
+        }
+        label, input, select, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            padding: 8px;
+        }
+        button {
+            background-color: #1abc9c;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #16a085;
+        }
+        .nombre-input {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Juego del Impostor</h1>
+    <div class="container">
+        <label for="cantidadJugadores">Cantidad de jugadores:</label>
+        <select id="cantidadJugadores" onchange="generarInputs()">
+            <!-- Se llenará con JS -->
+        </select>
+
+        <label for="cantidadImpostores">Cantidad de impostores:</label>
+        <select id="cantidadImpostores">
+            <!-- Se llenará con JS -->
+        </select>
+
+        <div id="inputsNombres">
+            <!-- Inputs para nombres de jugadores -->
+        </div>
+
+        <button onclick="empezarJuego()">Jugar</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Llenar selectores
+        const selectJugadores = document.getElementById('cantidadJugadores');
+        const selectImpostores = document.getElementById('cantidadImpostores');
+        const inputsDiv = document.getElementById('inputsNombres');
+
+        for (let i=3; i<=30; i++) {
+            let opt = document.createElement('option');
+            opt.value = i; opt.text = i;
+            if(i===4) opt.selected = true;
+            selectJugadores.appendChild(opt);
+        }
+
+        for (let i=1; i<=5; i++) {
+            let opt = document.createElement('option');
+            opt.value = i; opt.text = i;
+            if(i===1) opt.selected = true;
+            selectImpostores.appendChild(opt);
+        }
+
+        // Generar inputs de nombres según cantidad
+        function generarInputs() {
+            inputsDiv.innerHTML = '';
+            let cantidad = parseInt(selectJugadores.value);
+            for(let i=1; i<=cantidad; i++) {
+                let input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Nombre jugador ${i}`;
+                input.className = 'nombre-input';
+                input.id = `jugador${i}`;
+                inputsDiv.appendChild(input);
+            }
+        }
+
+        generarInputs(); // Llamar al inicio
+
+        // Iniciar juego
+        function empezarJuego() {
+            let cantidad = parseInt(selectJugadores.value);
+            let impostoresCount = parseInt(selectImpostores.value);
+
+            setCantidadJugadores(cantidad);
+            setCantidadImpostores(impostoresCount);
+
+            // Leer nombres
+            for(let i=0; i<cantidad; i++) {
+                let nombre = document.getElementById(`jugador${i+1}`).value;
+                if(!nombre) nombre = `Jugador ${i+1}`;
+                if(jugadores[i]) jugadores[i].nombre = nombre;
+            }
+
+            iniciarJuego();
+        }
+    </script>
+</body>
+</html>
