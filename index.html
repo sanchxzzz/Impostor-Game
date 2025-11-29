@@ -37,6 +37,10 @@
             border: none;
             padding: 8px;
         }
+        input {
+            background-color: #fff;
+            color: #000;
+        }
         button {
             background-color: #1abc9c;
             color: #fff;
@@ -52,61 +56,68 @@
     </style>
 </head>
 <body>
+
     <h1>Juego del Impostor</h1>
-    <div class="container">
-        <label for="cantidadJugadores">Cantidad de jugadores:</label>
-        <select id="cantidadJugadores" onchange="generarInputs()">
-            <!-- Se llenará con JS -->
-        </select>
 
-        <label for="cantidadImpostores">Cantidad de impostores:</label>
-        <select id="cantidadImpostores">
-            <!-- Se llenará con JS -->
-        </select>
+    <!-- FORMULARIO REAL (invisible) para evitar el bug del navegador -->
+    <form autocomplete="off" onsubmit="return false;">
+        <div class="container">
 
-        <div id="inputsNombres">
-            <!-- Inputs para nombres de jugadores -->
+            <label for="cantidadJugadores">Cantidad de jugadores:</label>
+            <select id="cantidadJugadores" onchange="generarInputs()"></select>
+
+            <label for="cantidadImpostores">Cantidad de impostores:</label>
+            <select id="cantidadImpostores"></select>
+
+            <div id="inputsNombres"></div>
+
+            <button type="button" onclick="empezarJuego()">Jugar</button>
+
         </div>
-
-        <button onclick="empezarJuego()">Jugar</button>
-    </div>
+    </form>
 
     <script src="script.js"></script>
+
     <script>
-        // Llenar selectores
         const selectJugadores = document.getElementById('cantidadJugadores');
         const selectImpostores = document.getElementById('cantidadImpostores');
         const inputsDiv = document.getElementById('inputsNombres');
 
+        // Jugadores 3 a 30
         for (let i=3; i<=30; i++) {
             let opt = document.createElement('option');
-            opt.value = i; opt.text = i;
+            opt.value = i; 
+            opt.text = i;
             if(i===4) opt.selected = true;
             selectJugadores.appendChild(opt);
         }
 
+        // Impostores 1 a 5
         for (let i=1; i<=5; i++) {
             let opt = document.createElement('option');
-            opt.value = i; opt.text = i;
+            opt.value = i; 
+            opt.text = i;
             if(i===1) opt.selected = true;
             selectImpostores.appendChild(opt);
         }
 
-        // Generar inputs de nombres según cantidad
+        // Generar inputs de nombres
         function generarInputs() {
             inputsDiv.innerHTML = '';
             let cantidad = parseInt(selectJugadores.value);
+
             for(let i=1; i<=cantidad; i++) {
                 let input = document.createElement('input');
                 input.type = 'text';
                 input.placeholder = `Nombre jugador ${i}`;
                 input.className = 'nombre-input';
                 input.id = `jugador${i}`;
+                input.autocomplete = "off"; // evita el bug
                 inputsDiv.appendChild(input);
             }
         }
 
-        generarInputs(); // Llamar al inicio
+        generarInputs();
 
         // Iniciar juego
         function empezarJuego() {
@@ -116,7 +127,6 @@
             setCantidadJugadores(cantidad);
             setCantidadImpostores(impostoresCount);
 
-            // Leer nombres
             for(let i=0; i<cantidad; i++) {
                 let nombre = document.getElementById(`jugador${i+1}`).value;
                 if(!nombre) nombre = `Jugador ${i+1}`;
@@ -126,5 +136,6 @@
             iniciarJuego();
         }
     </script>
+
 </body>
 </html>
